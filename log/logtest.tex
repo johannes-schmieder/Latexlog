@@ -1,6 +1,6 @@
-%  25 Oct 2024 21:59:44
+%  26 Oct 2024 09:47:15
 \documentclass{article}
-\usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subfigure,graphicx,}
+\usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subfig,graphicx,}
 \usepackage{tabularx,xcolor,colortbl,}
 \usepackage{hyperref}
 \hypersetup{                           colorlinks=true,                   linkcolor={blue!50!black},                    filecolor={blue!50!black},                 urlcolor={blue!80!black},                     }                              \date{}
@@ -28,19 +28,56 @@ The data used in this example is the auto.dta data set, which is a sample data s
 \begin{figure}[h] 
 \centering 
 \begin{tabular}{p{6in}}
-\caption{Four Scatterplots of different variables vs. weight using the subfigure subcommand} 
+\caption{Four Scatterplots of different variables vs. weight using the subfloat subcommand} 
 \end{tabular}
-\subfigure[Price vs. weight]{
-\includegraphics[clip=true, tim=0 0 0 0, width = .4\textwidth]{scatter_price.pdf} \\ 
+\subfloat[Price vs. weight]{
+\includegraphics[width = .45\textwidth]{scatter_price.pdf}  
 }
-\subfigure[Gear ratio vs. weight]{
-\includegraphics[clip=true, tim=0 0 0 0, width = .4\textwidth]{scatter_gear_ratio.pdf} \\ 
+\subfloat[Gear ratio vs. weight]{
+\includegraphics[width = .45\textwidth]{scatter_gear_ratio.pdf}  
 }
-\subfigure[Trunk space (cu. ft.) vs. weight]{
-\includegraphics[clip=true, tim=0 0 0 0, width = .4\textwidth]{scatter_trunk.pdf} \\ 
+\subfloat[Trunk space (cu. ft.) vs. weight]{
+\includegraphics[width = .45\textwidth]{scatter_trunk.pdf}  
 }
-\subfigure[Displacement (cu. in.) vs. weight]{
-\includegraphics[clip=true, tim=0 0 0 0, width = .4\textwidth]{scatter_displacement.pdf} \\ 
+\subfloat[Displacement (cu. in.) vs. weight]{
+\includegraphics[width = .45\textwidth]{scatter_displacement.pdf}  
+}
+\begin{tabular}{p{6in}}  
+\footnotesize \vspace{2pt} 
+\centering \textbf{Notes:} Based on the auto.dta data 
+\end{tabular} 
+\end{figure} 
+\begin{figure}[h] 
+\centering 
+\begin{tabular}{p{6in}}
+\caption{Four Scatterplots of different variables vs. weight using the subfloat subcommand} 
+\end{tabular}
+\subfloat[Price vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_price.pdf}  
+}
+\subfloat[Gear ratio vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_gear_ratio.pdf}  
+}
+\subfloat[Trunk space (cu. ft.) vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_trunk.pdf}  
+}
+\subfloat[Displacement (cu. in.) vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_displacement.pdf}  
+}
+\subfloat[Price vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_price.pdf}  
+}
+\subfloat[Gear ratio vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_gear_ratio.pdf}  
+}
+\subfloat[Trunk space (cu. ft.) vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_trunk.pdf}  
+}
+\subfloat[Displacement (cu. in.) vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_displacement.pdf}  
+}
+\subfloat[Price vs. weight]{
+\includegraphics[width = .3\textwidth]{scatter_price.pdf}  
 }
 \begin{tabular}{p{6in}}  
 \footnotesize \vspace{2pt} 

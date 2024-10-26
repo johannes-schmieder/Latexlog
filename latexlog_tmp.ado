@@ -165,8 +165,7 @@ program define latexlog
 			graph export `path'`filename', replace
 			file write `f' `"\subfigure[`caption']{"' _n
 			
-			// file write `f' `"\includegraphics[clip=true, trim=0 0 0 0, width = `width'\textwidth]{`filename'}  "' _n
-			file write `f' `"\includegraphics[width = `width'\textwidth]{`filename'}  "' _n
+			file write `f' `"\includegraphics[clip=true, trim=0 0 0 0, width = `width'\textwidth]{`filename'}  \\ "' _n
 			
 			file write `f' `"}"' _n
 		}

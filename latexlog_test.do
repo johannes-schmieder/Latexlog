@@ -23,12 +23,24 @@ scatter `var' weight
 latexlog `log': addfig, file(scatter_`var'.pdf) ///
 	float title(A scatterplot of `var' vs. weight using the addfig subcommand) notes(Based on the auto.dta data) eol width(.8)
 
-latexlog `log': subfigure , open title(Four Scatterplots of different variables vs. weight using the subfigure subcommand)
+latexlog `log': subfigure , open ///
+	title(Four Scatterplots of different variables vs. weight using the subfigure subcommand)
 foreach var in price gear_ratio trunk displacement {
 	scatter `var' weight
 	local cap : variable label `var'
 	latexlog `log': subfigure , addfig file(scatter_`var'.pdf) ///
-		caption("`cap' vs. weight")   width(.4)
+		caption("`cap' vs. weight")   width(.45)
+}
+latexlog `log': subfigure , close notes(Based on the auto.dta data)
+
+
+latexlog `log': subfigure , open ///
+	title(Four Scatterplots of different variables vs. weight using the subfigure subcommand)
+foreach var in price gear_ratio trunk displacement price gear_ratio trunk displacement price {
+	scatter `var' weight
+	local cap : variable label `var'
+	latexlog `log': subfigure , addfig file(scatter_`var'.pdf) ///
+		caption("`cap' vs. weight")   width(.3)
 }
 latexlog `log': subfigure , close notes(Based on the auto.dta data)
 
@@ -68,7 +80,9 @@ label var heavy "Weight >=3000 lbs"
 table (foreign heavy) (mpgcat) , nototals
 
 
-latexlog `log': collect export , title(Two Way Table using Stata "table" command and latexlog "collect export" subcommand) booktabs novert notes(more notes) three
+latexlog `log': collect export , ///
+	title(Two Way Table using Stata "table" command and latexlog "collect export" subcommand) ///
+	booktabs novert notes(more notes) three
 
 
 quietly: regress price mpg weight
