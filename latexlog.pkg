@@ -1,0 +1,14 @@
+d 'LATEXLOG': command to create graphs based on collapsed data
+d
+d  Flexible command to build latex log files from within Stata.
+d  Latexlog creates a tex file template and allows for adding text, tables, and graphs.
+d
+d Requires: Stata version 14
+d
+d Distribution-Date: 20241025
+d
+d Authors: Johannes F. Schmieder, Boston University, USA
+d Support: email johannes@bu.edu
+f latexlog.ado
+f latexlog.sthlp
+f latexlog.pkg 
