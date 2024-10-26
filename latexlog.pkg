@@ -12,3 +12,4 @@ d Support: email johannes@bu.edu
 f latexlog.ado
 f latexlog.sthlp
 f latexlog.pkg 
+f latexlog_test.do 

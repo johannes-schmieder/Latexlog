@@ -5,12 +5,11 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
 
  
 {title:Title}
-    Creates graphs similar to tables that are produced with tabstat. For example in a panel dataset on individual workers it could produce a graph of mean wages by year and gender.
-
+    Flexible command to build latex log files from within Stata.
 {title:Syntax}
 
 {phang}
-{cmd:cellgraph} {it:varname} [{help if}] [{help in}] , {cmd:by(}{it:byvar1 byvar2}{cmd:)}
+{cmd:latexlog} {it:filename} : {cmd:subcommand}
 	{break}
   [ {cmdab:c:olors}{cmd:(}{it:color1 color2 color3 ...}{cmd:)}
   {break}
