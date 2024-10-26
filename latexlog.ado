@@ -45,7 +45,7 @@ program define latexlog
 
         file write `f'  "%  `c(current_date)' `c(current_time)'" _n
         file write `f'  "\documentclass{article}" _n
-        file write `f'  "\usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subfigure,graphicx,}" _n
+        file write `f'  "\usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subcaption,graphicx,float,}" _n
 		file write `f'  "\usepackage{tabularx,xcolor,colortbl,}" _n
         file write `f'  "\usepackage{hyperref}" _n
         file write `f'  "\hypersetup{                       "         
@@ -112,6 +112,9 @@ program define latexlog
         return list
         local path = r(path)
         di "`path'"
+        splitpath "`filename'"
+        local figpath = r(path)
+        cap mkdir `path'`figpath'
         graph export `path'`filename', replace
         file open `f' using `"`logfile'"', write append
 
@@ -121,7 +124,7 @@ program define latexlog
             file write `f' `"\includegraphics[width = `width'\textwidth]{`filename'} `eol' "' _n
         }
         else {
-            file write `f' `"\begin{figure}[h] "' _n
+            file write `f' `"\begin{figure}[H] "' _n
             if "`title'"!="" {
                 file write `f' `"\centering "' _n
                 file write `f' `"\begin{tabular}{p{6in}}"' _n
@@ -134,9 +137,9 @@ program define latexlog
                 file write `f' `"\footnotesize \vspace{2pt} "' _n
                 // file write `f' `"\textbf{Notes}: `notes' "' _n
                 if "`notes_center'"=="notes_center" ///
-                    file write `f' `"\textbf{Notes:} `notes' "' _n
+                    file write `f' `"  \centering \textbf{Notes:} `notes' "' _n
                 else ///
-                    file write `f' `"\centering \textbf{Notes:} `notes' "' _n
+                    file write `f' `"  \textbf{Notes:} `notes' "' _n
                 file write `f' `"\end{tabular} "' _n
             }
             file write `f' `"\end{figure} "' _n
@@ -150,11 +153,11 @@ program define latexlog
 		file open `f' using `"`logfile'"', write append
 			
 		if "`open'"=="open" {
-			file write `f' `"\begin{figure}[h] "' _n
+			file write `f' `"\begin{figure}[H] "' _n
             if "`title'"!=`""' {
                 file write `f' `"\centering "' _n
                 file write `f' `"\begin{tabular}{p{6in}}"' _n
-                file write `f' `"\caption{`title'} "' _n
+                file write `f' `"  \caption{`title'} "' _n
                 file write `f' `"\end{tabular}"' _n
             }
 		}
@@ -162,23 +165,29 @@ program define latexlog
 			splitpath "`logfile'"
 			local path = r(path)
 			di "`path'"
+			splitpath "`filename'"
+			local figpath = r(path)
+			cap mkdir `path'`figpath'
 			graph export `path'`filename', replace
-			file write `f' `"\subfigure[`caption']{"' _n
-			
-			// file write `f' `"\includegraphics[clip=true, trim=0 0 0 0, width = `width'\textwidth]{`filename'}  "' _n
-			file write `f' `"\includegraphics[width = `width'\textwidth]{`filename'}  "' _n
-			
-			file write `f' `"}"' _n
+			// file write `f' `"\subfigure[`caption']{"' _n			
+			// // file write `f' `"\includegraphics[clip=true, trim=0 0 0 0, width = `width'\textwidth]{`filename'}  "' _n
+			// file write `f' `"\includegraphics[width = `width'\textwidth]{`filename'}  "' _n
+			// file write `f' `"}"' _n
+            file write `f' `"\begin{subfigure}{`width'\textwidth}"' _n
+            file write `f' `"  \includegraphics[width = 1.00\textwidth]{`filename'}  "' _n
+            if "`caption'"!="" {
+                file write `f' `"  \caption{`caption'}"' _n
+            }
+            file write `f' `"\end{subfigure}"' _n
 		}
 		if "`close'"=="close" {
 			if "`notes'"!="" {
 				file write `f' `"\begin{tabular}{p{6in}}  "' _n
-				file write `f' `"\footnotesize \vspace{2pt} "' _n
-				// file write `f' `"\textbf{Notes}: `notes' "' _n
+				file write `f' `" \footnotesize \vspace{2pt} "' _n
 				if "`notes_center'"=="notes_center" ///
-					file write `f' `"\textbf{Notes:} `notes' "' _n
+					file write `f' `"  \centering \textbf{Notes:} `notes' "' _n
 				else ///
-					file write `f' `"\centering \textbf{Notes:} `notes' "' _n
+					file write `f' `" \textbf{Notes:} `notes' "' _n
 				file write `f' `"\end{tabular} "' _n
 			}
 			file write `f' `"\end{figure} "' _n
@@ -264,7 +273,8 @@ program define latexlog
 		file close `table'
 		if `"`notes'"'!="" {
 			if "`threeparttable'"=="" ///
-				di in red "WARNING: Specify 'notes' option together with 'threeparttable' "
+				di in red "WARNING: 'notes' option should only be used together with 'threeparttable' "
+                file write `f' `" \footnotesize  "' _n
                 file write `f' `"\textbf{Notes:} `notes' "' _n
 		}
 
@@ -306,9 +316,10 @@ program define latexlog
             shell /Library/TeX/texbin/pdflatex -shell-escape --src -interaction=nonstopmode `filename'
             local viewcommand open
         }
-        cap erase "`filestub'.aux"
-        cap erase "`filestub'.log"
-        cap erase "`filestub'.out"
+        cap erase "`path'`filestub'.aux"
+        cap erase "`path'`filestub'.log"
+        cap erase "`path'`filestub'.out"
+        cap erase "`path'`filestub'.synctex.gz"
         cd `"`pwd'"'
 
         if "`view'"!="" shell `viewcommand' `path'`filestub'.pdf
