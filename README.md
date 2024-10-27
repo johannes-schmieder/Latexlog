@@ -5,5 +5,16 @@ This repository contains the latexlog package, which allows for the creation of 
 For detailed examples of the use of the latexlog package, see the [latexlog_test.do](latexlog_test.do) file.
 
 
+## Installation
+
+```stata
+net install latexlog, replace from(https://raw.githubusercontent.com/johannes-schmieder/latexlog/main/)
+```
+
+or if you have the Stata github package installed: 
+```stata
+github install johannes-schmieder/latexlog
+```
+
 
 
