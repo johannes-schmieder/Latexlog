@@ -9,19 +9,40 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
 {title:Syntax}
 
 {phang}
-{cmd:latexlog} {it:filename} : {cmd:subcommand}
-	{break}
-  [ {cmdab:c:olors}{cmd:(}{it:color1 color2 color3 ...}{cmd:)}
-  {break}
-  {cmdab:n:ame}{cmd:(}{it:graphname}{cmd:)}
-  {break}
-	{cmdab:s:tat}{cmd:(}{it:stat}{cmd:)}
-	{break}
-  {cmd:noci} {cmd:nonotes} {cmd:nodate} {cmdab:li:st}
-  {break}
-  {cmdab:msy:mbol}{cmd:(}{it:symbol}{cmd:)}
-  {break}
-  {cmdab:o:ptions}{cmd:(}{it:options}{cmd:)} ]
+{cmd:latexlog} {it:filename} : {cmd:subcommand} [{cmd:, }{it:options} ]
+
+where {it:filename} is the path and name of the log file and {it:subcommand} is one of the following:
+
+{it:subcommand}{col 26}description
+{hline 70}
+{help latexlog##main:Main}
+{cmd:open }[,{it:options}] {col 26}{...}
+Write the preamble of the latex file.
+{cmd:close } {col 26}{...}
+Write the closing commands of the latex file.
+{cmd:pdf }[,{it:options}] {col 26}{...}
+Compile the latex file to a PDF and optionally view it.
+
+{help latexlog##text:Adding sections and text}
+{cmd:title "}{it:string}{cmd:"}         {col 26}{...}
+Write the "string" as the title of the latex file.
+{cmd:section "}{it:string}{cmd:"}       {col 26}{...}
+Write the "string" as a section heading into the latex file.
+{cmd:subsection "}{it:string}{cmd:"}    {col 26}{...}
+Write the "string" as a subsection heading into the latex file.
+{cmd:writeln "}{it:string}{cmd:"}       {col 26}{...}
+Write the "string" as a line of text into the latex file.
+
+{help latexlog##figures:Figures}
+{cmd:addfig }[,{it:options}] {col 26}{...}
+Add a figure to the latex file.
+{cmd:subfigure }[,{it:options}] {col 26}{...}
+Add a figure with subfigures to the latex file.
+
+{help latexlog##tables:Tables}
+{cmd:collect }[,{it:options}] {col 26}{...}
+Export a table to the latex file.
+
 
 {p}
 
@@ -29,50 +50,196 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
 
 {p}
 
-Data is collapsed to cell level, where cells are defined by one or two categorical variables (byvar1 and byvar2) and cell means (or other statistics) of a third variabla ({it:varname}) are graphed.
+The {cmd:latexlog} command is used to build latex log files from within Stata. 
+The command is flexible and allows for a variety of different latex objects to be added to the log file.
+The command uses different subcommands to add different types of objects to the log file.
+If pdflatex is installed, the {cmd:pdf} subcommand can be used to automaticallly 
+compile the latex file to a PDF and optionally view it. 
 
-{title:Options}
+{marker subcommands}
+{title:Subcommands and Options}
 
-{p 0 4}{cmd:colors(}{it:color1 color2 ...}{cmd:)}:
-provide a list of colors to replace standard palette.
+{marker main}
+{dlgtab:Main}
 
-{p 0 4}{cmd:name(}{it:graphname}{cmd:)}:
-provide a graph name (just like the name option in other graph commands).
+{cmd:open }[,{it:options}] {col 26}{...}
+{col 26}This writes the preamble into the latex file. 
+{col 26}It uses the document class article and various standard packages.
+    {it:options} are:
+    {cmd:replace} {col 26}{...}
+    Overwrite the latex file if it already exists.
+    {cmd:append} {col 26}{...}
+    Append to the latex file if it already exists.
+    {cmd:geometry(}{it:string}{cmd:)} {col 26}{...}
+    Specify the geometry of the latex file. The default is a letter paper with 2.5cm margins.
+    {cmd:predocopen(}{it:string}{cmd:)} {col 26}{...}
+    Specify additional commands to be added to the preamble of the latex file.
+    {cmd:postdocopen(}{it:string}{cmd:)} {col 26}{...}
+    Specify additional commands to be added after the \begin{document} command.
 
-{p 0 4}{cmd:stat(}{it:statistics}{cmd:)}:
-the cell statistic to be used. If not specified "mean" is assumed. Other possibilities: min max and sum.
+{cmd:close }[,{it:options}] {col 26}{...}
+{col 26}This writes the closing commands of the latex file.
+    {it:options} are:
+    {cmd:predocclose(}{it:string}{cmd:)} {col 26}{...}
+    Specify additional commands to be added before the \end{document} command.
 
-{p 0 4}{cmd:noci}:
-don't display confidence intervals.
+{cmd:pdf }[,{it:options}] {col 26}{...}
+{col 26}Compile the latex file to a PDF and optionally view it.
+    {it:options} are:
+    {cmd:view} {col 26}{...}
+    View the PDF file after it is compiled.
 
-{p 0 4}{cmd:nonotes}:
-don't display any notes in legend.
+{marker text}
+{dlgtab:Adding sections and text}
 
-{p 0 4}{cmd:nodate}:
-don't display date in notes.
+{cmd:title "}{it:string}{cmd:"} {col 26}{...}
+{col 26}Write the "string" as the title of the latex file.
+{cmd:section "}{it:string}{cmd:"} {col 26}{...}
+{col 26}Write the "string" as a section heading into the latex file.
+{cmd:subsection "}{it:string}{cmd:"} {col 26}{...}
+{col 26}Write the "string" as a subsection heading into the latex file.
+{cmd:writeln "}{it:string}{cmd:"} {col 26}{...}
+{col 26}Write the "string" as a line of text into the latex file. 
 
-{p 0 4}{cmd:list}:
-list collapsed data
+{marker figures}
+{dlgtab:Figures}
+{cmd:addfig, }{it:filename} [{it:options}] {col 26}{...}
+{col 26}Add a figure to the latex file.
+    {it:filename} is the path and name of the figure to be added. 
+    The path is relative to the log file.
+    E.g. if the log file is in ./log/ and the figure is in ./figures/ 
+    then the filename is ./figures/myfigure.pdf and will be stored in ./log/figures/myfigure.pdf
 
-{p 0 4}{cmd:msymbol(}{it:symbol}{cmd:)}:
-Change marker symbol where {it:symbol} is of {help symbolstyle}.
+    {it:options} are:
+    {cmd:file(}{it:string}{cmd:)} {col 26}{...}
+    Specify the file name of the figure to be added.
+    {cmd:float} {col 26}{...}
+    Float the figure to the width of the column.
+    {cmd:title(}{it:string}{cmd:)} {col 26}{...}
+    Specify the title of the figure.
+    {cmd:notes(}{it:string}{cmd:)} {col 26}{...}
+    Specify the notes of the figure.
+    {cmd:eol} {col 26}{...}
+    End of line -- Adds a \\ after the figure.
+    {cmd:width(}{it:real}{cmd:)} {col 26}{...}
+    Specify the width of the figure. The default is 0.9.
 
-{p 0 4}{cmd:options(}{it:string}{cmd:)}:
-provide any twoway options to pass through to the call of the twoway command
-  see the example for why this might be useful. Can also be used to overwrite options that are given as standard,
-  for example options(title(My Title)) would overwrite the standard title with "My Title"
+{cmd:subfigure, }{it:options} {col 26}{...}
+{col 26}Add a figure with subfigures to the latex file.
+    {it:options} are:
+    {cmd:open} {col 26}{...}
+    Open a subfigure environment.
+    {cmd:title(}{it:string}{cmd:)} {col 26}{...}
+    Specify the title of the figure, to be used with {cmd:open}.
+    {cmd:close} {col 26}{...}
+    Close a subfigure environment.  
+    {cmd:notes(}{it:string}{cmd:)} {col 26}{...}
+    Specify the notes of the figure, to be used with {cmd:close}.
+    {cmd:addfig} {col 26}{...}
+    Add a figure to the subfigure environment.
+    {it:filename} is the path and name of the figure to be added. 
+    The path is relative to the log file.
+    E.g. if the log file is in ./log/ and the figure is in ./figures/ 
+    then the filename is ./figures/myfigure.pdf and will be stored in ./log/figures/myfigure.pdf
+    {cmd:caption(}{it:string}{cmd:)} {col 26}{...}
+    Specify the caption of the figure.
+    {cmd:width(}{it:real}{cmd:)} {col 26}{...}
+    Specify the width of the figure. The default is 0.9.
+    {cmd:eol} {col 26}{...}
+    End of line -- Adds a \\ after the figure.
 
-{title:Examples}
 
-{p 8 16}{inp:. sysuse nlsw88}{p_end}
 
-{p 8 16}{inp:. cellgraph wage, by(grade) }{p_end}
+{marker tables}
+{dlgtab:Tables}
 
-{p 8 16}{inp:. cellgraph wage, by(grade union) }{p_end}
+{cmd:collect }[,{it:options}] {col 26}{...}
+{col 26}Export a table to the latex file.
+    {it:options} are:
+    {cmd:title(}{it:string}{cmd:)} {col 26}{...}
+    Specify the title of the table.
+    {cmd:notes(}{it:string}{cmd:)} {col 26}{...}
+    Specify the notes of the table.
+    {cmd:booktabs} {col 26}{...}
+    Use booktabs style for the table.
+    {cmd:novert} {col 26}{...}
+    Do not draw vertical lines in the table.
+    {cmd:threeparttable} {col 26}{...}
+    Use threeparttable style for the table.
+    {cmd:fontsize(}{it:string}{cmd:)} {col 26}{...}
+    Specify the fontsize of the table. E.g. {cmd:fontsize(10)} will set the fontsize to 10pt.
+    {cmd:landscape} {col 26}{...}
+    Use landscape mode for the table.
 
-{p 8 16}{inp:. cellgraph wage, by(grade union) stat(max)}{p_end}
+{marker examples}
+{title:Example}
 
-{p 8 16}{inp:. cellgraph wage if industry>2 & industry<10, by(grade industry) nonotes noci options(legend(col(2)))) }{p_end}
+{space 4}{hline 10} {it:Example : Latexfile with Figures and Table} {hline 26}
+{space 4}{bf:Note:} This will create a subfolder called "./log/" in your working directory 
+           and save the log file there.
+{space 4}{hline 80} 
+
+{cmd}{...}
+{* example_start - ex1}{...}
+    local log ./log/logtest.tex
+    cap mkdir ./log/
+    latexlog `log': open
+
+    latexlog `log': title "Illustrating the use of the latexlog package"
+    latexlog `log': writeln "A descriptive analysis of the nlsw88.dta data"
+    latexlog `log': section "Introduction"
+    latexlog `log': writeln "This file provides examples of the use of the latexlog package."
+
+    latexlog `log': section "Saving Figures"
+
+    sysuse nlsw88, clear
+    local var wage
+    scatter `var' ttl_exp
+    latexlog `log': addfig, file(./figures/scatter_`var'.pdf) ///
+      float ///
+      title(A scatterplot of `var' vs. experience using the addfig subcommand) ///
+      notes(Based on the nlsw88.dta data) eol width(.8)
+
+    latexlog `log': subfigure , open ///
+      title(Four Scatterplots of different variables vs. experience using the subfigure subcommand)
+    foreach var in wage hours tenure grade {
+      scatter `var' ttl_exp , ylabel(,angle(vertical))
+      local cap : variable label `var'
+      latexlog `log': subfigure , addfig file(./figures/scatter_`var'.pdf) ///
+        caption("`cap' vs. experience")   width(.45)
+    }
+    latexlog `log': subfigure , close notes(Based on the nlsw88.dta data)
+    latexlog `log': writeln "\clearpage\pagebreak"	
+
+    latexlog `log': section "Saving Tables with latexlog"
+    latexlog `log': subsection "Example of a twoway table:"
+    latexlog `log': writeln "The following example creates a twoway table using Stata's \textbf{table} command. "
+    latexlog `log': writeln "This table is then saved to the log file using the \textbf{collect export} subcommand."
+
+    table occupation union, nototals
+    latexlog `log': collect export , ///
+      title(Table using Stata "table" command and latexlog "collect export" subcommand) ///
+      booktabs novert notes(Command: table occupation union, nototals) three
+
+    latexlog `log': subsection "Example of a regression table:"
+    g logwage = log(wage)
+    estimates clear
+    qui: regress logwage ttl_exp
+    estimates store model1
+    qui: regress logwage ttl_exp grade married
+    estimates store model2
+    etable, estimates(model1 model2) mstat(N) mstat(r2_a)
+    latexlog `log': collect export , ///
+      title(Regression Table using Stata "etable" command and latexlog "collect export" subcommand) ///
+      notes(Command: etable, estimates(model1 model2) mstat(N) mstat(r2\_a)) ///
+      threeparttable booktabs novert
+
+    latexlog `log': close
+    latexlog `log': pdf, view
+{* example_end}{...}
+{txt}{...}
+{space 4}{hline 80}
+{space 4}{it:({stata latexlog_run ex1 using latexlog.sthlp, preserve:click to run})}
 
 
 {title:Author}
