@@ -197,6 +197,7 @@ program define latexlog
     }
 
 	if "`command'" == "collect" {
+        di `"`0'"'
 		syntax [,  ///
             TITle(str) ///
             NOTES(str) ///
@@ -208,9 +209,6 @@ program define latexlog
             ]
 		tempfile collectfile
 		collect export `collectfile', tableonly replace  as(tex)
-
-		di "`target'"
-		di "`appendix'"
 
 		tempname table
 

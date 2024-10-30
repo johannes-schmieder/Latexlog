@@ -2,59 +2,46 @@
 {.-}
 help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
 {.-}
-
  
 {title:Title}
-    Flexible command to build latex log files from within Stata.
+
+    {cmd:latexlog:} Flexible command to build latex log files from within Stata.
+
 {title:Syntax}
 
 {phang}
-{cmd:latexlog} {it:filename} : {cmd:subcommand} [{cmd:, }{it:options} ]
+{cmd:latexlog} {it:filename} : {cmd:subcommand} [{cmd:, }{it:options}]
 
-where {it:filename} is the path and name of the log file and {it:subcommand} is one of the following:
+    where {it:filename} is the path and name of the log file and {it:subcommand} is one of the following:
 
-{it:subcommand}{col 26}description
-{hline 70}
-{help latexlog##main:Main}
-{cmd:open }[,{it:options}] {col 26}{...}
-Write the preamble of the latex file.
-{cmd:close } {col 26}{...}
-Write the closing commands of the latex file.
-{cmd:pdf }[,{it:options}] {col 26}{...}
-Compile the latex file to a PDF and optionally view it.
+    {it:subcommand}{col 34}description
+    {hline 70}
+    {help latexlog##main:Main}
+    {cmd:open }[, {it:options}]           {col 34}Write the preamble of the latex file.
+    {cmd:close }                         {col 34}Write the closing commands of the latex file.
+    {cmd:pdf }[, {it:options}]            {col 34}Compile the latex file to a PDF and optionally view it.
 
-{help latexlog##text:Adding sections and text}
-{cmd:title "}{it:string}{cmd:"}         {col 26}{...}
-Write the "string" as the title of the latex file.
-{cmd:section "}{it:string}{cmd:"}       {col 26}{...}
-Write the "string" as a section heading into the latex file.
-{cmd:subsection "}{it:string}{cmd:"}    {col 26}{...}
-Write the "string" as a subsection heading into the latex file.
-{cmd:writeln "}{it:string}{cmd:"}       {col 26}{...}
-Write the "string" as a line of text into the latex file.
+    {help latexlog##text:Adding sections and text}
+    {cmd:title "}{it:str}{cmd:"}         {col 34}Write the "{it:str}" as the title of the latex file.
+    {cmd:section "}{it:str}{cmd:"}       {col 34}Write the "{it:str}" as a section heading into the latex file.
+    {cmd:subsection "}{it:str}{cmd:"}    {col 34}Write the "{it:str}" as a subsection heading into the latex file.
+    {cmd:writeln "}{it:str}{cmd:"}       {col 34}Write the "{it:str}" as a line of text into the latex file.
+   
 
-{help latexlog##figures:Figures}
-{cmd:addfig }[,{it:options}] {col 26}{...}
-Add a figure to the latex file.
-{cmd:subfigure }[,{it:options}] {col 26}{...}
-Add a figure with subfigures to the latex file.
+    {help latexlog##figures:Figures}
+    {cmd:addfig }[, {it:options}]          {col 34}Add a figure to the latex file.
+    {cmd:subfigure }[, {it:options}]       {col 34}Add a figure with subfigures to the latex file.
 
-{help latexlog##tables:Tables}
-{cmd:collect }[,{it:options}] {col 26}{...}
-Export a table to the latex file.
-
-
-{p}
+    {help latexlog##tables:Tables}
+    {cmd:collect }[, {it:options}]         {col 34}Export a table to the latex file.
 
 {title:Description}
 
-{p}
-
-The {cmd:latexlog} command is used to build latex log files from within Stata. 
-The command is flexible and allows for a variety of different latex objects to be added to the log file.
-The command uses different subcommands to add different types of objects to the log file.
-If pdflatex is installed, the {cmd:pdf} subcommand can be used to automaticallly 
-compile the latex file to a PDF and optionally view it. 
+    The {cmd:latexlog} command is used to build latex log files from within Stata. 
+    The command is flexible and allows for a variety of different latex objects to be added to the log file.
+    The command uses different subcommands to add different types of objects to the log file.
+    If pdflatex is installed, the {cmd:pdf} subcommand can be used to automaticallly 
+    compile the latex file to a PDF and optionally view it. 
 
 {marker subcommands}
 {title:Subcommands and Options}
@@ -62,114 +49,79 @@ compile the latex file to a PDF and optionally view it.
 {marker main}
 {dlgtab:Main}
 
-{cmd:open }[,{it:options}] {col 26}{...}
-{col 26}This writes the preamble into the latex file. 
-{col 26}It uses the document class article and various standard packages.
-    {it:options} are:
-    {cmd:replace} {col 26}{...}
-    Overwrite the latex file if it already exists.
-    {cmd:append} {col 26}{...}
-    Append to the latex file if it already exists.
-    {cmd:geometry(}{it:string}{cmd:)} {col 26}{...}
-    Specify the geometry of the latex file. The default is a letter paper with 2.5cm margins.
-    {cmd:predocopen(}{it:string}{cmd:)} {col 26}{...}
-    Specify additional commands to be added to the preamble of the latex file.
-    {cmd:postdocopen(}{it:string}{cmd:)} {col 26}{...}
-    Specify additional commands to be added after the \begin{document} command.
+    {cmd:open }[, {it:options}] {col 34}This writes the preamble into the latex file. 
+    {col 34}It uses the document class article and various standard packages.
+        {it:options} are:
+        {cmd:replace} {col 34}Overwrite the latex file if it already exists.
+        {cmd:append} {col 34}Append to the latex file if it already exists.
+        {cmd:geometry(}{it:str}{cmd:)} {col 34}Specify the geometry of the latex file. The default is a letter paper with 2.5cm margins.
+        {cmd:predocopen(}{it:str}{cmd:)} {col 34}Specify additional commands to be added to the preamble of the latex file.
+        {cmd:postdocopen(}{it:str}{cmd:)} {col 34}Specify additional commands to be added after the \begin{document} command.
 
-{cmd:close }[,{it:options}] {col 26}{...}
-{col 26}This writes the closing commands of the latex file.
-    {it:options} are:
-    {cmd:predocclose(}{it:string}{cmd:)} {col 26}{...}
-    Specify additional commands to be added before the \end{document} command.
+    {cmd:close }[, {it:options}] {col 34}This writes the closing commands of the latex file.
+        {it:options} are:
+        {cmd:predocclose(}{it:str}{cmd:)} {col 34}Specify additional commands to be added before the \end{document} command.
 
-{cmd:pdf }[,{it:options}] {col 26}{...}
-{col 26}Compile the latex file to a PDF and optionally view it.
-    {it:options} are:
-    {cmd:view} {col 26}{...}
-    View the PDF file after it is compiled.
+    {cmd:pdf }[, {it:options}] {col 34}Compile the latex file to a PDF and optionally view it.
+        {it:options} are:
+        {cmd:view} {col 34}View the PDF file after it is compiled.
 
 {marker text}
 {dlgtab:Adding sections and text}
 
-{cmd:title "}{it:string}{cmd:"} {col 26}{...}
-{col 26}Write the "string" as the title of the latex file.
-{cmd:section "}{it:string}{cmd:"} {col 26}{...}
-{col 26}Write the "string" as a section heading into the latex file.
-{cmd:subsection "}{it:string}{cmd:"} {col 26}{...}
-{col 26}Write the "string" as a subsection heading into the latex file.
-{cmd:writeln "}{it:string}{cmd:"} {col 26}{...}
-{col 26}Write the "string" as a line of text into the latex file. 
+    {cmd:title "}{it:str}{cmd:"} {col 34}Write the {it:str} as the title of the latex file.
+    {cmd:section "}{it:str}{cmd:"} {col 34}Write the {it:str} as a section heading into the latex file.
+    {cmd:subsection "}{it:str}{cmd:"} {col 34}Write the {it:str} as a subsection heading into the latex file.
+    {cmd:writeln "}{it:str}{cmd:"} {col 34}Write the {it:str} as a line of text into the latex file. 
 
 {marker figures}
 {dlgtab:Figures}
-{cmd:addfig, }{it:filename} [{it:options}] {col 26}{...}
-{col 26}Add a figure to the latex file.
-    {it:filename} is the path and name of the figure to be added. 
-    The path is relative to the log file.
-    E.g. if the log file is in ./log/ and the figure is in ./figures/ 
-    then the filename is ./figures/myfigure.pdf and will be stored in ./log/figures/myfigure.pdf
 
-    {it:options} are:
-    {cmd:file(}{it:string}{cmd:)} {col 26}{...}
-    Specify the file name of the figure to be added.
-    {cmd:float} {col 26}{...}
-    Float the figure to the width of the column.
-    {cmd:title(}{it:string}{cmd:)} {col 26}{...}
-    Specify the title of the figure.
-    {cmd:notes(}{it:string}{cmd:)} {col 26}{...}
-    Specify the notes of the figure.
-    {cmd:eol} {col 26}{...}
-    End of line -- Adds a \\ after the figure.
-    {cmd:width(}{it:real}{cmd:)} {col 26}{...}
-    Specify the width of the figure. The default is 0.9.
+    {cmd:addfig, filename(}{it:str}{cmd:)} [{it:options}] {col 34}Add the current graph as a figure to the latex file.
+        {col 34}{it:str} is the path and name of the figure to be added. 
+        {col 34}The path is relative to the log file.
+        {col 34}E.g. if the log file is in ./log/ and the "{it:str}" is in "./figures/myfigure.pdf" 
+        {col 34}then the figure will be stored in ./log/figures/myfigure.pdf
 
-{cmd:subfigure, }{it:options} {col 26}{...}
-{col 26}Add a figure with subfigures to the latex file.
-    {it:options} are:
-    {cmd:open} {col 26}{...}
-    Open a subfigure environment.
-    {cmd:title(}{it:string}{cmd:)} {col 26}{...}
-    Specify the title of the figure, to be used with {cmd:open}.
-    {cmd:close} {col 26}{...}
-    Close a subfigure environment.  
-    {cmd:notes(}{it:string}{cmd:)} {col 26}{...}
-    Specify the notes of the figure, to be used with {cmd:close}.
-    {cmd:addfig} {col 26}{...}
-    Add a figure to the subfigure environment.
-    {it:filename} is the path and name of the figure to be added. 
-    The path is relative to the log file.
-    E.g. if the log file is in ./log/ and the figure is in ./figures/ 
-    then the filename is ./figures/myfigure.pdf and will be stored in ./log/figures/myfigure.pdf
-    {cmd:caption(}{it:string}{cmd:)} {col 26}{...}
-    Specify the caption of the figure.
-    {cmd:width(}{it:real}{cmd:)} {col 26}{...}
-    Specify the width of the figure. The default is 0.9.
-    {cmd:eol} {col 26}{...}
-    End of line -- Adds a \\ after the figure.
+        {it:options} are:
+        {cmd:file(}{it:str}{cmd:)} {col 34}Specify the file name of the figure to be added.
+        {cmd:float} {col 34}Float the figure to the width of the column.
+        {cmd:title(}{it:str}{cmd:)} {col 34}Specify the title of the figure.
+        {cmd:notes(}{it:str}{cmd:)} {col 34}Specify the notes of the figure.
+        {cmd:eol} {col 34}End of line -- Adds a \\ after the figure.
+        {cmd:width(}{it:real}{cmd:)} {col 34}Specify the width of the figure. The default is 0.9.
 
-
+    {cmd:subfigure, }{it:options} {col 34}Add a figure with subfigures to the latex file.
+        {it:options} are:
+        {cmd:open} {col 34}Open a subfigure environment.
+        {cmd:title(}{it:str}{cmd:)} {col 34}Specify the title of the figure, to be used with {cmd:open}.
+        {cmd:close} {col 34}Close a subfigure environment.  
+        {cmd:notes(}{it:str}{cmd:)} {col 34}Specify the notes of the figure, to be used with {cmd:close}.
+        {cmd:addfig filename(}{it:str}{cmd:)} {col 34}Add the current graph as subfigure to the latex file.
+        {col 34}{it:str} is the path and name of the figure to be added. 
+        {col 34}The path is relative to the log file.
+        {col 34}E.g. if the log file is in ./log/ and the "{it:str}" is in "./figures/myfigure.pdf" 
+        {col 34}then the figure will be stored in ./log/figures/myfigure.pdf
+        {cmd:caption(}{it:str}{cmd:)} {col 34}Specify the caption of the subfigure.
+        {cmd:width(}{it:real}{cmd:)} {col 34}Specify the width of the subfigure. The default is 0.9.
+        {col 34}E.g. for 2x1 subfigures (2 rows, 1 column), a good width might be 0.9.
+        {col 34}For 2x2 subfigures (2 rows, 2 columns), a good width might be 0.45.
+        {cmd:eol} {col 34}End of line -- Adds a \\ after the figure.
 
 {marker tables}
 {dlgtab:Tables}
 
-{cmd:collect }[,{it:options}] {col 26}{...}
-{col 26}Export a table to the latex file.
-    {it:options} are:
-    {cmd:title(}{it:string}{cmd:)} {col 26}{...}
-    Specify the title of the table.
-    {cmd:notes(}{it:string}{cmd:)} {col 26}{...}
-    Specify the notes of the table.
-    {cmd:booktabs} {col 26}{...}
-    Use booktabs style for the table.
-    {cmd:novert} {col 26}{...}
-    Do not draw vertical lines in the table.
-    {cmd:threeparttable} {col 26}{...}
-    Use threeparttable style for the table.
-    {cmd:fontsize(}{it:string}{cmd:)} {col 26}{...}
-    Specify the fontsize of the table. E.g. {cmd:fontsize(10)} will set the fontsize to 10pt.
-    {cmd:landscape} {col 26}{...}
-    Use landscape mode for the table.
+    {cmd:collect }[, {it:options}] {col 34}Exports a table (i.e. a Stata collection) to the latex file.
+        {col 34}The command uses the {cmd:collect export} command to export the table, but adds some 
+        {col 34}additional latex code to put the table in a float environment, to add a title and notes.
+        {it:options} are:
+        {cmd:title(}{it:str}{cmd:)} {col 34}Specify the title of the table.
+        {cmd:notes(}{it:str}{cmd:)} {col 34}Specify the notes of the table.
+        {cmd:booktabs} {col 34}Use booktabs style for the table.
+        {cmd:novert} {col 34}Do not draw vertical lines in the table.
+        {cmd:threeparttable} {col 34}Use threeparttable style for the table.
+        {cmd:fontsize(}{it:float}{cmd:)} {col 34}Specify the fontsize of the table. E.g. {cmd:fontsize(10.5)} will set the fontsize to 10.5pt.
+        {cmd:landscape} {col 34}Use landscape mode for the table.
 
 {marker examples}
 {title:Example}

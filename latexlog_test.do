@@ -18,7 +18,7 @@ latexlog `log': writeln "The data used in this example is the nlsw88.dta data se
 latexlog `log': section "Summary Statistics"
 
 sysuse nlsw88, clear
- 
+
 local var wage
 scatter `var' ttl_exp
 latexlog `log': addfig, file(./figures/scatter_`var'.pdf) ///
