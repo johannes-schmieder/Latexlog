@@ -16,5 +16,7 @@ or if you have the Stata github package installed:
 github install johannes-schmieder/latexlog
 ```
 
+Find instructions to install the github package [here](https://github.com/haghish/github?tab=readme-ov-file#2-installing-github-module).
+
 
 
