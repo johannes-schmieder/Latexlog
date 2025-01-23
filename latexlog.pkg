@@ -13,3 +13,5 @@ f latexlog.ado
 f latexlog.sthlp
 f latexlog.pkg 
 f latexlog_test.do 
+f latexlog_run.ado
+

@@ -1,0 +1,4 @@
+v 3
+d Latexlog - command by Johannes F. Schmieder
+
+p Flexible command to build latex log files from within Stata.
