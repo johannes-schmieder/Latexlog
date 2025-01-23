@@ -47,6 +47,7 @@ program define latexlog
         file write `f'  "\documentclass{article}" _n
         file write `f'  "\usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subcaption,graphicx,float,}" _n
 		file write `f'  "\usepackage{tabularx,xcolor,colortbl,}" _n
+        file write `f'  "\usepackage[table]{xcolor}" _n
         file write `f'  "\usepackage{hyperref}" _n
         file write `f'  "\hypersetup{                       "         
         file write `f'  "    colorlinks=true,               "                 
