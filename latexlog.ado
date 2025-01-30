@@ -46,7 +46,7 @@ program define latexlog
         file write `f'  "%  `c(current_date)' `c(current_time)'" _n
         file write `f'  "\documentclass{article}" _n
         file write `f'  "\usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subcaption,graphicx,float,}" _n
-		file write `f'  "\usepackage{tabularx,xcolor,colortbl,}" _n
+		file write `f'  "\usepackage{tabularx,colortbl,}" _n
         file write `f'  "\usepackage[table]{xcolor}" _n
         file write `f'  "\usepackage{hyperref}" _n
         file write `f'  "\hypersetup{                       "         
@@ -108,7 +108,8 @@ program define latexlog
     }
 
     if "`command'" == "addfig" {
-        syntax , FILEname(str) [float TITle(str) NOTES(str) notes_center WIdth(real 0.9) eol]
+        syntax , FILEname(str) [float TITle(str) NOTES(str) notes_center WIdth(real 0.9) eol ///
+            title_in_tabular]
         splitpath "`logfile'"
         return list
         local path = r(path)
@@ -127,10 +128,16 @@ program define latexlog
         else {
             file write `f' `"\begin{figure}[H] "' _n
             if "`title'"!="" {
-                file write `f' `"\centering "' _n
-                file write `f' `"\begin{tabular}{p{6in}}"' _n
-                file write `f' `"\caption{`title'} "' _n
-                file write `f' `"\end{tabular}"' _n
+                if "`title_in_tabular'"=="title_in_tabular" {
+                    file write `f' `"\centering "' _n
+                    file write `f' `"\begin{tabular}{p{6in}}"' _n
+                    file write `f' `"\caption{`title'} "' _n
+                    file write `f' `"\end{tabular}"' _n
+                }
+                else {
+                    file write `f' `"\centering "' _n
+                    file write `f' `"\caption{`title'} "' _n
+                }
             }
             file write `f' `"\includegraphics[width = `width'\textwidth]{`filename'} \\ "' _n
             if "`notes'"!="" {
@@ -150,16 +157,22 @@ program define latexlog
 	
 	if "`command'" == "subfigure" {
         syntax ,  [open addfig close  FILEname(str) caption(str)  ///
-			TITle(str) NOTES(str) notes_center WIdth(real 0.9) eol]
+			TITle(str) NOTES(str) notes_center WIdth(real 0.9) eol /// 
+            title_in_tabular]
 		file open `f' using `"`logfile'"', write append
 			
 		if "`open'"=="open" {
 			file write `f' `"\begin{figure}[H] "' _n
             if "`title'"!=`""' {
                 file write `f' `"\centering "' _n
-                file write `f' `"\begin{tabular}{p{6in}}"' _n
-                file write `f' `"  \caption{`title'} "' _n
-                file write `f' `"\end{tabular}"' _n
+                if "`title_in_tabular'"=="title_in_tabular" {
+                    file write `f' `"\begin{tabular}{p{6in}}"' _n
+                    file write `f' `"  \caption{`title'} "' _n
+                    file write `f' `"\end{tabular}"' _n
+                }
+                else {
+                    file write `f' `"  \caption{`title'} "' _n
+                }
             }
 		}
 		if "`addfig'"=="addfig" {
@@ -184,7 +197,7 @@ program define latexlog
 		if "`close'"=="close" {
 			if "`notes'"!="" {
 				file write `f' `"\begin{tabular}{p{6in}}  "' _n
-				file write `f' `" \footnotesize \vspace{2pt} "' _n
+				file write `f' `" \footnotesize "' _n
 				if "`notes_center'"=="notes_center" ///
 					file write `f' `"  \centering \textbf{Notes:} `notes' "' _n
 				else ///

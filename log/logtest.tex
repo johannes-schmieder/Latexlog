@@ -1,7 +1,8 @@
-%  30 Oct 2024 11:04:37
+%  30 Jan 2025 09:25:00
 \documentclass{article}
 \usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subcaption,graphicx,float,}
-\usepackage{tabularx,xcolor,colortbl,}
+\usepackage{tabularx,colortbl,}
+\usepackage[table]{xcolor}
 \usepackage{hyperref}
 \hypersetup{                           colorlinks=true,                   linkcolor={blue!50!black},                    filecolor={blue!50!black},                 urlcolor={blue!80!black},                     }                              \date{}
 \geometry{verbose,letterpaper,lmargin=2.5cm,tmargin=2.5cm}
@@ -13,12 +14,11 @@
 A descriptive analysis of the nlsw88.dta data
 \section{Introduction}
 This file provides examples of the use of the latexlog package.
-\section{Saving Figures}
+The data used in this example is the nlsw88.dta data set, which is a sample data set provided with Stata.
+\section{Summary Statistics}
 \begin{figure}[H] 
 \centering 
-\begin{tabular}{p{6in}}
 \caption{A scatterplot of wage vs. experience using the addfig subcommand} 
-\end{tabular}
 \includegraphics[width = .8\textwidth]{./figures/scatter_wage.pdf} \\ 
 \begin{tabular}{p{6in}}  
 \footnotesize \vspace{2pt} 
@@ -27,9 +27,7 @@ This file provides examples of the use of the latexlog package.
 \end{figure} 
 \begin{figure}[H] 
 \centering 
-\begin{tabular}{p{6in}}
   \caption{Four Scatterplots of different variables vs. experience using the subfigure subcommand} 
-\end{tabular}
 \begin{subfigure}{.45\textwidth}
   \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage.pdf}  
   \caption{Hourly wage vs. experience}
@@ -47,14 +45,99 @@ This file provides examples of the use of the latexlog package.
   \caption{Current grade completed vs. experience}
 \end{subfigure}
 \begin{tabular}{p{6in}}  
- \footnotesize \vspace{2pt} 
+ \footnotesize 
+ \textbf{Notes:} Based on the nlsw88.dta data 
+\end{tabular} 
+\end{figure} 
+\begin{figure}[H] 
+\centering 
+  \caption{Four Scatterplots of different variables vs. experience using the subfigure subcommand} 
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind1.pdf}  
+  \caption{Wage vs. Total Experience for Ag/Forestry/Fisheries}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind2.pdf}  
+  \caption{Wage vs. Total Experience for Mining}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind3.pdf}  
+  \caption{Wage vs. Total Experience for Construction}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind4.pdf}  
+  \caption{Wage vs. Total Experience for Manufacturing}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind5.pdf}  
+  \caption{Wage vs. Total Experience for Transport/Comm/Utility}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind6.pdf}  
+  \caption{Wage vs. Total Experience for Wholesale/Retail trade}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind7.pdf}  
+  \caption{Wage vs. Total Experience for Finance/Ins/Real estate}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind8.pdf}  
+  \caption{Wage vs. Total Experience for Business/Repair svc}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind9.pdf}  
+  \caption{Wage vs. Total Experience for Personal services}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind10.pdf}  
+  \caption{Wage vs. Total Experience for Entertainment/Rec svc}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind11.pdf}  
+  \caption{Wage vs. Total Experience for Professional services}
+\end{subfigure}
+\begin{subfigure}{.3\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind12.pdf}  
+  \caption{Wage vs. Total Experience for Public administration}
+\end{subfigure}
+\begin{tabular}{p{6in}}  
+ \footnotesize 
  \textbf{Notes:} Based on the nlsw88.dta data 
 \end{tabular} 
 \end{figure} 
 \clearpage\pagebreak
 \section{Saving Tables with latexlog}
-\subsection{Example of a twoway table:}
-The following example creates a twoway table using Stata's \textbf{table} command. 
+Since latexlog operates directly on a tex file, it is easy to save 
+tables created with the \textbf{esttab} command or other commands that 
+produce latex output that is appended to a file.
+Here is an example of saving a table created with the esttab command:
+ 
+\vspace{10pt}
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Table using Stata "esttab" command to directly append to the log file}
+\begin{tabular}{l*{1}{c}}
+\toprule
+            &\multicolumn{1}{c}{(1)}\\
+            &\multicolumn{1}{c}{logwage}\\
+\midrule
+ttl\_exp     &      0.0480\sym{***}\\
+            &     (19.76)         \\
+\addlinespace
+\_cons      &       1.267\sym{***}\\
+            &     (39.07)         \\
+\midrule
+\(N\)       &        2246         \\
+\bottomrule
+\multicolumn{2}{l}{\footnotesize \textit{t} statistics in parentheses}\\
+\multicolumn{2}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+\end{table}
+
+\vspace{10pt}
+Stata's table command is very flexible and powerful. 
+The following example creates a twoway table of the number workers in each occupation and union category 
+using Stata's \textbf{table} command. 
 This table is then saved to the log file using the \textbf{collect export} subcommand.
 \begin{table}[htbp] 
 \centering 
@@ -119,7 +202,6 @@ This table is then saved to the log file using the \textbf{collect export} subco
 \textbf{Notes:} Command: table occupation union, nototals 
 \end{threeparttable} 
 \end{table}
-\subsection{Example of a regression table:}
 \begin{table}[htbp] 
 \centering 
 \begin{threeparttable} 

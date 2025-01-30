@@ -1,5 +1,6 @@
 // ---- Test Code ----
 program drop _all
+run latexlog.ado
 
 set trace on
 set tracedepth 1
