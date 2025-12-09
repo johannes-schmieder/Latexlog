@@ -140,8 +140,24 @@ program define latexlog
         di "`path'"
         splitpath "`filename'"
         local figpath = r(path)
+        // Strip leading ./ from figpath for Windows compatibility
+        if substr("`figpath'", 1, 2) == "./" {
+            local figpath = substr("`figpath'", 3, .)
+        }
         cap mkdir `path'`figpath'
-        graph export `path'`filename', replace
+        mata: st_local("dir_exists", strofreal(direxists(st_local("path") + st_local("figpath"))))
+        if !`dir_exists' {
+            di as error "Error: Could not create directory `path'`figpath'"
+            exit 693
+        }
+        capture noisily graph export `path'`filename', replace
+        if _rc {
+            di as error "Error: Could not export graph to `path'`filename'"
+            if _rc == 198 {
+                di as error "  No graph in memory. Create a graph before using addfig."
+            }
+            exit _rc
+        }
         file open `f' using `"`logfile'"', write append
 
         if "`float'"=="" {
@@ -228,8 +244,24 @@ program define latexlog
 			di "`path'"
 			splitpath "`filename'"
 			local figpath = r(path)
+			// Strip leading ./ from figpath for Windows compatibility
+			if substr("`figpath'", 1, 2) == "./" {
+				local figpath = substr("`figpath'", 3, .)
+			}
 			cap mkdir `path'`figpath'
-			graph export `path'`filename', replace
+			mata: st_local("dir_exists", strofreal(direxists(st_local("path") + st_local("figpath"))))
+			if !`dir_exists' {
+				di as error "Error: Could not create directory `path'`figpath'"
+				exit 693
+			}
+			capture noisily graph export `path'`filename', replace
+			if _rc {
+				di as error "Error: Could not export graph to `path'`filename'"
+				if _rc == 198 {
+					di as error "  No graph in memory. Create a graph before using subfigure."
+				}
+				exit _rc
+			}
 			// file write `f' `"\subfigure[`caption']{"' _n
 			// // file write `f' `"\includegraphics[clip=true, trim=0 0 0 0, width = `width'\textwidth]{`filename'}  "' _n
 			// file write `f' `"\includegraphics[width = `width'\textwidth]{`filename'}  "' _n
@@ -549,10 +581,12 @@ program define splitpath, rclass
 
     // di regexm("`fullpath'","^(([A-Z]:)?[\.]?[\\{1,2}/]?.*[\\{1,2}/])*(.+)\.(.+)")
 
-    qui di regexm("`fullpath'","^(.*[\\/])*(.+)\.(.+)")
-    cap noi local path = regexs(1)
-    cap noi local filestub = regexs(2)
-    cap noi local fileend  = regexs(3)
+    local matched = regexm("`fullpath'", "^(.*[\\/])*(.+)\.(.+)")
+    if `matched' {
+        local path = regexs(1)
+        local filestub = regexs(2)
+        local fileend = regexs(3)
+    }
     di "Path: `path'"
     di "Filestub: `filestub'"
     di "Fileend: `fileend'"
