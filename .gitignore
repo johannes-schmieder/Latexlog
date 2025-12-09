@@ -186,3 +186,7 @@ cython_debug/
 
 # OSX
 .DS_Store
+
+# Plans
+CLAUDE.md
+plans/
