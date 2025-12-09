@@ -24,6 +24,7 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
     {help latexlog##text:Adding sections and text}
     {cmd:title "}{it:str}{cmd:"}         {col 34}Write the "{it:str}" as the title of the latex file.
     {cmd:section "}{it:str}{cmd:"}       {col 34}Write the "{it:str}" as a section heading into the latex file.
+    {cmd:sections "}{it:str}{cmd:"}      {col 34}Write the "{it:str}" as an unnumbered section heading (\section*).
     {cmd:subsection "}{it:str}{cmd:"}    {col 34}Write the "{it:str}" as a subsection heading into the latex file.
     {cmd:writeln "}{it:str}{cmd:"}       {col 34}Write the "{it:str}" as a line of text into the latex file.
    
@@ -71,6 +72,7 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
 
     {cmd:title "}{it:str}{cmd:"} {col 34}Write the {it:str} as the title of the latex file.
     {cmd:section "}{it:str}{cmd:"} {col 34}Write the {it:str} as a section heading into the latex file.
+    {cmd:sections "}{it:str}{cmd:"} {col 34}Write the {it:str} as an unnumbered section heading (\section*) into the latex file.
     {cmd:subsection "}{it:str}{cmd:"} {col 34}Write the {it:str} as a subsection heading into the latex file.
     {cmd:writeln "}{it:str}{cmd:"} {col 34}Write the {it:str} as a line of text into the latex file. 
 
@@ -84,19 +86,19 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
         {col 34}then the figure will be stored in ./log/figures/myfigure.pdf
 
         {it:options} are:
-        {cmd:file(}{it:str}{cmd:)} {col 34}Specify the file name of the figure to be added.
+        {cmd:filename(}{it:str}{cmd:)} {col 34}Specify the file name of the figure to be added.
         {cmd:float} {col 34}Float the figure to the width of the column.
-        {cmd:title(}{it:str}{cmd:)} {col 34}Specify the title of the figure.
-        {cmd:notes(}{it:str}{cmd:)} {col 34}Specify the notes of the figure.
+        {cmd:title(}{it:str}[{cmd:, tabular}]{cmd:)} {col 34}Specify the title of the figure. Use {cmd:tabular} sub-option to wrap title in tabular for better formatting.
+        {cmd:notes(}{it:str}[{cmd:, center}]{cmd:)} {col 34}Specify the notes of the figure. Use {cmd:center} sub-option to center the notes.
         {cmd:eol} {col 34}End of line -- Adds a \\ after the figure.
         {cmd:width(}{it:real}{cmd:)} {col 34}Specify the width of the figure. The default is 0.9.
 
     {cmd:subfigure, }{it:options} {col 34}Add a figure with subfigures to the latex file.
         {it:options} are:
         {cmd:open} {col 34}Open a subfigure environment.
-        {cmd:title(}{it:str}{cmd:)} {col 34}Specify the title of the figure, to be used with {cmd:open}.
-        {cmd:close} {col 34}Close a subfigure environment.  
-        {cmd:notes(}{it:str}{cmd:)} {col 34}Specify the notes of the figure, to be used with {cmd:close}.
+        {cmd:title(}{it:str}[{cmd:, tabular}]{cmd:)} {col 34}Specify the title of the figure, to be used with {cmd:open}. Use {cmd:tabular} sub-option to wrap title in tabular.
+        {cmd:close} {col 34}Close a subfigure environment.
+        {cmd:notes(}{it:str}[{cmd:, center}]{cmd:)} {col 34}Specify the notes of the figure, to be used with {cmd:close}. Use {cmd:center} sub-option to center the notes.
         {cmd:addfig filename(}{it:str}{cmd:)} {col 34}Add the current graph as subfigure to the latex file.
         {col 34}{it:str} is the path and name of the figure to be added. 
         {col 34}The path is relative to the log file.
@@ -122,6 +124,10 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
         {cmd:threeparttable} {col 34}Use threeparttable style for the table.
         {cmd:fontsize(}{it:float}{cmd:)} {col 34}Specify the fontsize of the table. E.g. {cmd:fontsize(10.5)} will set the fontsize to 10.5pt.
         {cmd:landscape} {col 34}Use landscape mode for the table.
+        {cmd:tabularx(}{it:col_nums}[{cmd:, width(}{it:width}{cmd:)}]{cmd:)} {col 34}Convert table to tabularx format for better column wrapping.
+        {col 34}{it:col_nums} specifies which columns to make flexible (X columns).
+        {col 34}E.g. {cmd:tabularx(2 3)} makes columns 2 and 3 flexible.
+        {col 34}Use {cmd:width()} sub-option to set table width (default: \textwidth).
 
 {marker examples}
 {title:Example}
@@ -147,7 +153,7 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
     sysuse nlsw88, clear
     local var wage
     scatter `var' ttl_exp
-    latexlog `log': addfig, file(./figures/scatter_`var'.pdf) ///
+    latexlog `log': addfig, filename(./figures/scatter_`var'.pdf) ///
       float ///
       title(A scatterplot of `var' vs. experience using the addfig subcommand) ///
       notes(Based on the nlsw88.dta data) eol width(.8)
@@ -157,7 +163,7 @@ help for {cmd:latexlog} {right:(Johannes F. Schmieder)}
     foreach var in wage hours tenure grade {
       scatter `var' ttl_exp , ylabel(,angle(vertical))
       local cap : variable label `var'
-      latexlog `log': subfigure , addfig file(./figures/scatter_`var'.pdf) ///
+      latexlog `log': subfigure , addfig filename(./figures/scatter_`var'.pdf) ///
         caption("`cap' vs. experience")   width(.45)
     }
     latexlog `log': subfigure , close notes(Based on the nlsw88.dta data)
@@ -207,5 +213,5 @@ Comments welcome!
 {title:Also see}
 
 {p 0 21}
-On-line:  help for {help collapse}, {help tabstat}
+On-line:  help for {help table}, {help collect export}, {help graph export}
 {p_end}

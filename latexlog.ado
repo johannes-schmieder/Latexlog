@@ -9,6 +9,7 @@
 /*-------------------------------------------------------*/
 capture program drop latexlog
 program define latexlog
+    version 17
 
     // Parse arguments for name of logfile
     capt _on_colon_parse `0'
@@ -28,8 +29,6 @@ program define latexlog
     // Put remaining arguments back into local 0 in order to parse ///
     // it via syntax command later
     local 0 , `options'
-    //   di `"`0'"'
-    //   macro dir
 
     // File handle:
     tempname f
@@ -45,8 +44,8 @@ program define latexlog
 
         file write `f'  "%  `c(current_date)' `c(current_time)'" _n
         file write `f'  "\documentclass{article}" _n
-        file write `f'  "\usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subcaption,graphicx,float,}" _n
-		file write `f'  "\usepackage{tabularx,colortbl,}" _n
+        file write `f'  "\usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subcaption,graphicx,float}" _n
+		file write `f'  "\usepackage{tabularx,colortbl}" _n
         file write `f'  "\usepackage[table]{xcolor}" _n
         file write `f'  "\usepackage{hyperref}" _n
         file write `f'  "\hypersetup{                       "         
@@ -65,8 +64,7 @@ program define latexlog
         file close `f'
 
     }
-
-    if "`command'" == "close" {
+    else if "`command'" == "close" {
         syntax [, PREDOCClose(str)]
         file open `f' using `"`logfile'"', write append
 
@@ -75,39 +73,33 @@ program define latexlog
 
         file close `f'
     }
-
-    if "`command'" == "title" {
+    else if "`command'" == "title" {
         file open `f' using `"`logfile'"', write append
         file write `f' `"\title{`line'}"' _n
         file write `f' `"\maketitle"' _n
         file close `f'
     }
-
-    if "`command'" == "section" {
+    else if "`command'" == "section" {
         file open `f' using `"`logfile'"', write append
         file write `f' `"\section{`line'}"' _n
         file close `f'
     }
-
-    if "`command'" == "sections" {
+    else if "`command'" == "sections" {
         file open `f' using `"`logfile'"', write append
         file write `f' `"\section*{`line'}"' _n
         file close `f'
     }
-
-    if "`command'" == "subsection" {
+    else if "`command'" == "subsection" {
         file open `f' using `"`logfile'"', write append
         file write `f' `"\subsection{`line'}"' _n
         file close `f'
     }
-
-    if "`command'" == "writeln" {
+    else if "`command'" == "writeln" {
         file open `f' using `"`logfile'"', write append
         file write `f' `"`line'"' _n
         file close `f'
     }
-
-    if "`command'" == "addfig" {
+    else if "`command'" == "addfig" {
         syntax , FILEname(str) [float TITle(str asis) NOTES(str asis) WIdth(real 0.9) eol]
 
         // Parse title sub-options
@@ -135,9 +127,7 @@ program define latexlog
         }
 
         splitpath "`logfile'"
-        return list
         local path = r(path)
-        di "`path'"
         splitpath "`filename'"
         local figpath = r(path)
         // Strip leading ./ from figpath for Windows compatibility
@@ -193,8 +183,7 @@ program define latexlog
         }
         file close `f'
     }
-	
-	if "`command'" == "subfigure" {
+	else if "`command'" == "subfigure" {
         syntax ,  [open addfig close  FILEname(str) caption(str)  ///
 			TITle(str asis) NOTES(str asis) WIdth(real 0.9) eol]
 
@@ -241,7 +230,6 @@ program define latexlog
 		if "`addfig'"=="addfig" {
 			splitpath "`logfile'"
 			local path = r(path)
-			di "`path'"
 			splitpath "`filename'"
 			local figpath = r(path)
 			// Strip leading ./ from figpath for Windows compatibility
@@ -262,10 +250,6 @@ program define latexlog
 				}
 				exit _rc
 			}
-			// file write `f' `"\subfigure[`caption']{"' _n
-			// // file write `f' `"\includegraphics[clip=true, trim=0 0 0 0, width = `width'\textwidth]{`filename'}  "' _n
-			// file write `f' `"\includegraphics[width = `width'\textwidth]{`filename'}  "' _n
-			// file write `f' `"}"' _n
             file write `f' `"\begin{subfigure}{`width'\textwidth}"' _n
             file write `f' `"  \includegraphics[width = 1.00\textwidth]{`filename'}  "' _n
             if "`caption'"!="" {
@@ -288,9 +272,7 @@ program define latexlog
 
 
     }
-
-	if "`command'" == "collect" {
-        di `"`0'"'
+	else if "`command'" == "collect" {
 		syntax [,  ///
             TITle(str) ///
             NOTES(str) ///
@@ -531,13 +513,8 @@ program define latexlog
         }
 
 		file close `f'
-
-
-
     }
-
-
-    if "`command'" == "pdf" {
+    else if "`command'" == "pdf" {
         syntax [, view]
         splitpath "`logfile'"
         local path = r(path)
@@ -556,8 +533,8 @@ program define latexlog
             local viewcommand open
         }
         if "`=c(os)'"=="Unix" {
-            shell /Library/TeX/texbin/pdflatex -shell-escape --src -interaction=nonstopmode `filename'
-            local viewcommand open
+            shell pdflatex -shell-escape --src -interaction=nonstopmode `filename'
+            local viewcommand xdg-open
         }
         cap erase "`path'`filestub'.aux"
         cap erase "`path'`filestub'.log"
@@ -566,6 +543,10 @@ program define latexlog
         cd `"`pwd'"'
 
         if "`view'"!="" shell `viewcommand' `path'`filestub'.pdf
+    }
+    else {
+        di as error "Unknown latexlog subcommand: `command'"
+        exit 198
     }
 
 end // latexlog
@@ -587,10 +568,6 @@ program define splitpath, rclass
         local filestub = regexs(2)
         local fileend = regexs(3)
     }
-    di "Path: `path'"
-    di "Filestub: `filestub'"
-    di "Fileend: `fileend'"
-    di "Filename: `filestub'.`fileend'"
 
     if "`path'"=="" return local path "./"
     else return local path "`path'"
