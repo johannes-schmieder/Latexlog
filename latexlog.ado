@@ -528,11 +528,11 @@ program define latexlog
             shell pdflatex -shell-escape --src -interaction=nonstopmode `filename'
             local viewcommand start
         }
-        if "`=c(os)'"=="MacOSX" {
+        else if "`c(os)'" == "MacOSX" | ( "`c(os)'" == "Unix" & strmatch("`c(machine_type)'", "Mac*") ) {
             shell /Library/TeX/texbin/pdflatex -shell-escape --src -interaction=nonstopmode `filename'
             local viewcommand open
         }
-        if "`=c(os)'"=="Unix" {
+        else if "`=c(os)'"=="Unix" {
             shell pdflatex -shell-escape --src -interaction=nonstopmode `filename'
             local viewcommand xdg-open
         }
