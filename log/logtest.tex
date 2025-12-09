@@ -1,148 +1,164 @@
-%  30 Jan 2025 09:25:00
+%   9 Dec 2025 11:56:10
 \documentclass{article}
 \usepackage{geometry,booktabs,longtable,pdflscape,rotating,threeparttable,subcaption,graphicx,float,}
 \usepackage{tabularx,colortbl,}
 \usepackage[table]{xcolor}
 \usepackage{hyperref}
 \hypersetup{                           colorlinks=true,                   linkcolor={blue!50!black},                    filecolor={blue!50!black},                 urlcolor={blue!80!black},                     }                              \date{}
-\geometry{verbose,letterpaper,lmargin=2.5cm,tmargin=2.5cm}
-
+\geometry{verbose,letterpaper,lmargin=2.5cm,rmargin=2.5cm,tmargin=2cm,bmargin=2cm}
+\newcommand{\testnote}[1]{\textit{Note: #1}}
 \begin{document}
-
-\title{Illustrating the use of the latexlog package}
+\noindent
+\title{Comprehensive Test of the latexlog Package}
 \maketitle
-A descriptive analysis of the nlsw88.dta data
-\section{Introduction}
-This file provides examples of the use of the latexlog package.
-The data used in this example is the nlsw88.dta data set, which is a sample data set provided with Stata.
-\section{Summary Statistics}
+This document tests all latexlog subcommands and options.
+
+\section{Introduction (Numbered Section)}
+This is a numbered section created with the \textbf{section} subcommand.
+\section*{Background (Unnumbered Section)}
+This is an unnumbered section created with the \textbf{sections} subcommand.
+Note that this section does not have a number in the output.
+\subsection{A Subsection}
+This is a subsection created with the \textbf{subsection} subcommand. \\
+\subsection{Test Custom Command defined in predocopen}
+\testnote{This note uses the custom command defined in predocopen.}
+
+\section{Figure Tests}
+\subsection{Figure with Float Environment}
 \begin{figure}[H] 
 \centering 
-\caption{A scatterplot of wage vs. experience using the addfig subcommand} 
-\includegraphics[width = .8\textwidth]{./figures/scatter_wage.pdf} \\ 
+\caption{Wage vs. Experience - Float Environment} 
+\includegraphics[width = .8\textwidth]{./figures/scatter_wage_float.pdf} \\ 
 \begin{tabular}{p{6in}}  
 \footnotesize \vspace{2pt} 
-  \textbf{Notes:} Based on the nlsw88.dta data 
+  \textbf{Notes:} Based on nlsw88.dta data 
 \end{tabular} 
 \end{figure} 
+\subsection{Figure Inline (No Float)}
+The following figure is inline (no float environment):
+\includegraphics[width = .4\textwidth]{./figures/scatter_hours_inline.pdf}  
+\subsection{Figure with Centered Notes}
 \begin{figure}[H] 
 \centering 
-  \caption{Four Scatterplots of different variables vs. experience using the subfigure subcommand} 
+\caption{Tenure vs. Experience} 
+\includegraphics[width = .75\textwidth]{./figures/scatter_tenure_centered.pdf} \\ 
+\begin{tabular}{p{6in}}  
+\footnotesize \vspace{2pt} 
+  \centering \textbf{Notes:} These notes are centered below the figure 
+\end{tabular} 
+\end{figure} 
+\subsection{Figure with Title in Tabular}
+\begin{figure}[H] 
+\centering 
+\begin{tabular}{p{6in}}
+\caption{Grade vs. Experience - Title in Tabular Format} 
+\end{tabular}
+\includegraphics[width = .75\textwidth]{./figures/scatter_grade_tabular.pdf} \\ 
+\begin{tabular}{p{6in}}  
+\footnotesize \vspace{2pt} 
+  \textbf{Notes:} Using title tabular sub-option 
+\end{tabular} 
+\end{figure} 
+\subsection{Figure with EOL}
+\begin{figure}[H] 
+\centering 
+\caption{Wage vs. Tenure with EOL} 
+\includegraphics[width = .7\textwidth]{./figures/scatter_wage_tenure.pdf} \\ 
+\end{figure} 
+\section{Subfigure Tests}
+\subsection{Basic Subfigures}
+\begin{figure}[H] 
+\centering 
+  \caption{Four Variables vs. Experience - Basic Subfigures} 
 \begin{subfigure}{.45\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage.pdf}  
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_wage.pdf}  
   \caption{Hourly wage vs. experience}
 \end{subfigure}
 \begin{subfigure}{.45\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_hours.pdf}  
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_hours.pdf}  
   \caption{Usual hours worked vs. experience}
 \end{subfigure}
 \begin{subfigure}{.45\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_tenure.pdf}  
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_tenure.pdf}  
   \caption{Job tenure (years) vs. experience}
 \end{subfigure}
 \begin{subfigure}{.45\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_grade.pdf}  
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_grade.pdf}  
   \caption{Current grade completed vs. experience}
 \end{subfigure}
 \begin{tabular}{p{6in}}  
  \footnotesize 
- \textbf{Notes:} Based on the nlsw88.dta data 
+ \textbf{Notes:} Based on nlsw88.dta data 
 \end{tabular} 
 \end{figure} 
+\subsection{Subfigures with Centered Notes}
 \begin{figure}[H] 
 \centering 
-  \caption{Four Scatterplots of different variables vs. experience using the subfigure subcommand} 
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind1.pdf}  
-  \caption{Wage vs. Total Experience for Ag/Forestry/Fisheries}
+  \caption{Two Variables - Centered Notes} 
+\begin{subfigure}{.45\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_centered_wage.pdf}  
+  \caption{Hourly wage}
 \end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind2.pdf}  
-  \caption{Wage vs. Total Experience for Mining}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind3.pdf}  
-  \caption{Wage vs. Total Experience for Construction}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind4.pdf}  
-  \caption{Wage vs. Total Experience for Manufacturing}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind5.pdf}  
-  \caption{Wage vs. Total Experience for Transport/Comm/Utility}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind6.pdf}  
-  \caption{Wage vs. Total Experience for Wholesale/Retail trade}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind7.pdf}  
-  \caption{Wage vs. Total Experience for Finance/Ins/Real estate}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind8.pdf}  
-  \caption{Wage vs. Total Experience for Business/Repair svc}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind9.pdf}  
-  \caption{Wage vs. Total Experience for Personal services}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind10.pdf}  
-  \caption{Wage vs. Total Experience for Entertainment/Rec svc}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind11.pdf}  
-  \caption{Wage vs. Total Experience for Professional services}
-\end{subfigure}
-\begin{subfigure}{.3\textwidth}
-  \includegraphics[width = 1.00\textwidth]{./figures/scatter_wage_ind12.pdf}  
-  \caption{Wage vs. Total Experience for Public administration}
+\begin{subfigure}{.45\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_centered_hours.pdf}  
+  \caption{Usual hours worked}
 \end{subfigure}
 \begin{tabular}{p{6in}}  
  \footnotesize 
- \textbf{Notes:} Based on the nlsw88.dta data 
+  \centering \textbf{Notes:} These notes are centered 
+\end{tabular} 
+\end{figure} 
+\subsection{Subfigures with Title in Tabular}
+\begin{figure}[H] 
+\centering 
+\begin{tabular}{p{6in}}
+  \caption{Subfigure Example with Tabular Title - This is particularly useful for Figures with very long titles so that the title breaks nicely over multiple lines} 
+\end{tabular}
+\begin{subfigure}{.45\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_tabular_tenure.pdf}  
+  \caption{Job tenure (years)}
+\end{subfigure}
+\begin{subfigure}{.45\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_tabular_grade.pdf}  
+  \caption{Current grade completed}
+\end{subfigure}
+\begin{tabular}{p{6in}}  
+ \footnotesize 
+ \textbf{Notes:} Title uses tabular formatting 
+\end{tabular} 
+\end{figure} 
+\subsection{Subfigures with EOL}
+\begin{figure}[H] 
+\centering 
+  \caption{Two-Row Subfigure Layout Using EOL} 
+\begin{subfigure}{.45\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_eol1.pdf}  
+  \caption{Wage - Row 1}
+\end{subfigure}
+\begin{subfigure}{.45\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_eol2.pdf}  
+  \caption{Hours - Row 1}
+\end{subfigure}
+\begin{subfigure}{.45\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_eol3.pdf}  
+  \caption{Tenure - Row 2}
+\end{subfigure}
+\begin{subfigure}{.45\textwidth}
+  \includegraphics[width = 1.00\textwidth]{./figures/subfig_eol4.pdf}  
+  \caption{Grade - Row 2}
+\end{subfigure}
+\begin{tabular}{p{6in}}  
+ \footnotesize 
+ \textbf{Notes:} Using eol to create two rows 
 \end{tabular} 
 \end{figure} 
 \clearpage\pagebreak
-\section{Saving Tables with latexlog}
-Since latexlog operates directly on a tex file, it is easy to save 
-tables created with the \textbf{esttab} command or other commands that 
-produce latex output that is appended to a file.
-Here is an example of saving a table created with the esttab command:
- 
-\vspace{10pt}
-\begin{table}[htbp]\centering
-\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
-\caption{Table using Stata "esttab" command to directly append to the log file}
-\begin{tabular}{l*{1}{c}}
-\toprule
-            &\multicolumn{1}{c}{(1)}\\
-            &\multicolumn{1}{c}{logwage}\\
-\midrule
-ttl\_exp     &      0.0480\sym{***}\\
-            &     (19.76)         \\
-\addlinespace
-\_cons      &       1.267\sym{***}\\
-            &     (39.07)         \\
-\midrule
-\(N\)       &        2246         \\
-\bottomrule
-\multicolumn{2}{l}{\footnotesize \textit{t} statistics in parentheses}\\
-\multicolumn{2}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
-\end{tabular}
-\end{table}
-
-\vspace{10pt}
-Stata's table command is very flexible and powerful. 
-The following example creates a twoway table of the number workers in each occupation and union category 
-using Stata's \textbf{table} command. 
-This table is then saved to the log file using the \textbf{collect export} subcommand.
+\section{Table and Collection Tests}
+\subsection{Basic Table Export}
 \begin{table}[htbp] 
 \centering 
 \begin{threeparttable} 
-\caption{Table using Stata table command and latexlog collect export subcommand} 
+\caption{Occupation by Union Status - Basic} 
 
 \centering
 \begin{tabular}{lll}
@@ -202,54 +218,356 @@ This table is then saved to the log file using the \textbf{collect export} subco
 \textbf{Notes:} Command: table occupation union, nototals 
 \end{threeparttable} 
 \end{table}
+\subsection{Table with Custom Font Size}
 \begin{table}[htbp] 
 \centering 
 \begin{threeparttable} 
-\caption{Regression Table using Stata etable command and latexlog collect export subcommand} 
+\caption{Race by Marital Status - Font Size 10} 
+\fontsize{10}{10}\selectfont 
 
 \centering
 \begin{tabular}{lll}
 \toprule
+\multicolumn{1}{c}{} &
+  \multicolumn{2}{c}{Married} \\
+\multicolumn{1}{c}{} &
+  \multicolumn{1}{r}{Single} &
+  \multicolumn{1}{r}{Married} \\
+\midrule
+\multicolumn{1}{l}{Race} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{r}{} \\
+\multicolumn{1}{l}{\hspace{1em}White} &
+  \multicolumn{1}{r}{487} &
+  \multicolumn{1}{r}{1,150} \\
+\multicolumn{1}{l}{\hspace{1em}Black} &
+  \multicolumn{1}{r}{309} &
+  \multicolumn{1}{r}{274} \\
+\multicolumn{1}{l}{\hspace{1em}Other} &
+  \multicolumn{1}{r}{8} &
+  \multicolumn{1}{r}{18} \\
+\bottomrule
+\end{tabular}
+
+ \footnotesize  
+\textbf{Notes:} Using fontsize(10) option 
+\end{threeparttable} 
+\end{table}
+\subsection{Table in Landscape Mode and using Tabularx (Auto-width Columns)}
+\begin{landscape}
+\begin{table}[htbp] 
+\centering 
+\begin{threeparttable} 
+\caption{Occupation by Industry - Landscape Mode and using Tabularx (Auto-width Columns)} 
+
+\centering
+\begin{tabularx}{1.5\textwidth}{l>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
+\toprule
+ &
+  \multicolumn{12}{c}{Industry}  \\
+ &
+  Ag\slash Forestry\slash Fisheries &
+  Mining &
+  Const\-ructi\-on &
+  Manuf\-actur\-ing &
+  Transport\slash Comm\slash Utility &
+  Wholesale\slash Retail trade &
+  Finance\slash Ins\slash Real estate &
+  Business\slash Repair svc &
+  Personal services &
+  Enter\-tainm\-ent\slash Rec svc &
+  Profe\-ssion\-al services &
+  Public admin\-istra\-tion  \\
+\midrule
+Occupation &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+    \\
+\hspace{1em}Professional\slash Technical &
+  1 &
+  1 &
+  1 &
+  24 &
+  4 &
+  7 &
+  8 &
+  13 &
+  2 &
+  2 &
+  208 &
+  45  \\
+\hspace{1em}Managers\slash Admin &
+  1 &
+   &
+  5 &
+  37 &
+  9 &
+  65 &
+  56 &
+  9 &
+  5 &
+  2 &
+  56 &
+  18  \\
+\hspace{1em}Sales &
+  6 &
+  3 &
+  16 &
+  73 &
+  49 &
+  113 &
+  95 &
+  39 &
+  14 &
+  4 &
+  213 &
+  100  \\
+\hspace{1em}Clerical\slash Unskilled &
+  1 &
+   &
+  1 &
+  13 &
+  2 &
+  50 &
+  29 &
+  4 &
+  1 &
+  1 &
+   &
+    \\
+\hspace{1em}Craftsmen &
+   &
+   &
+   &
+  29 &
+  5 &
+  10 &
+   &
+  1 &
+  1 &
+   &
+  5 &
+  2  \\
+\hspace{1em}Operatives &
+  2 &
+   &
+  2 &
+  185 &
+  12 &
+  23 &
+   &
+  1 &
+  12 &
+  1 &
+  5 &
+  1  \\
+\hspace{1em}Transport &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+  28 &
+   &
+   &
+    \\
+\hspace{1em}Laborers &
+   &
+   &
+  1 &
+  1 &
+  6 &
+  58 &
+  4 &
+  16 &
+  33 &
+  6 &
+  155 &
+  5  \\
+\hspace{1em}Farmers &
+  1 &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+    \\
+\hspace{1em}Farm laborers &
+  5 &
+   &
+   &
+   &
+   &
+  2 &
+   &
+   &
+   &
+   &
+   &
+    \\
+\hspace{1em}Service &
+   &
+   &
+  3 &
+  5 &
+  2 &
+  2 &
+   &
+  2 &
+   &
+  1 &
+   &
+  1  \\
+\hspace{1em}Household workers &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+   &
+  2  \\
+\hspace{1em}Other &
+   &
+   &
+   &
+   &
+   &
+  2 &
+   &
+  1 &
+   &
+   &
+  182 &
+  1  \\
+\bottomrule
+\end{tabularx}
+
+ \footnotesize  
+\textbf{Notes:} This table is displayed in landscape orientation and uses tabularx to automatically wrap the columns 
+\end{threeparttable} 
+\end{table}
+\end{landscape}
+\subsection{Regression Table with etable}
+\begin{table}[htbp] 
+\centering 
+\begin{threeparttable} 
+\caption{Regression Results - Three Models} 
+
+\centering
+\begin{tabular}{llll}
+\toprule
 \multicolumn{1}{r}{} &
+  \multicolumn{1}{c}{logwage} &
   \multicolumn{1}{c}{logwage} &
   \multicolumn{1}{c}{logwage} \\
 \midrule
 \multicolumn{1}{l}{Total work experience (years)} &
   \multicolumn{1}{r}{0.048} &
-  \multicolumn{1}{r}{0.039} \\
+  \multicolumn{1}{r}{0.039} &
+  \multicolumn{1}{r}{0.030} \\
 \multicolumn{1}{l}{} &
   \multicolumn{1}{r}{(0.002)} &
-  \multicolumn{1}{r}{(0.002)} \\
+  \multicolumn{1}{r}{(0.002)} &
+  \multicolumn{1}{r}{(0.003)} \\
 \multicolumn{1}{l}{Current grade completed} &
   \multicolumn{1}{r}{} &
+  \multicolumn{1}{r}{0.081} &
   \multicolumn{1}{r}{0.081} \\
 \multicolumn{1}{l}{} &
   \multicolumn{1}{r}{} &
+  \multicolumn{1}{r}{(0.004)} &
   \multicolumn{1}{r}{(0.004)} \\
 \multicolumn{1}{l}{Married} &
   \multicolumn{1}{r}{} &
-  \multicolumn{1}{r}{-0.007} \\
+  \multicolumn{1}{r}{-0.007} &
+  \multicolumn{1}{r}{-0.008} \\
 \multicolumn{1}{l}{} &
   \multicolumn{1}{r}{} &
+  \multicolumn{1}{r}{(0.022)} &
   \multicolumn{1}{r}{(0.022)} \\
+\multicolumn{1}{l}{Job tenure (years)} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{r}{0.012} \\
+\multicolumn{1}{l}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{r}{} &
+  \multicolumn{1}{r}{(0.002)} \\
 \multicolumn{1}{l}{Intercept} &
   \multicolumn{1}{r}{1.267} &
-  \multicolumn{1}{r}{0.325} \\
+  \multicolumn{1}{r}{0.325} &
+  \multicolumn{1}{r}{0.370} \\
 \multicolumn{1}{l}{} &
   \multicolumn{1}{r}{(0.032)} &
+  \multicolumn{1}{r}{(0.060)} &
   \multicolumn{1}{r}{(0.060)} \\
 \multicolumn{1}{l}{Number of observations} &
   \multicolumn{1}{r}{2246} &
-  \multicolumn{1}{r}{2244} \\
+  \multicolumn{1}{r}{2244} &
+  \multicolumn{1}{r}{2229} \\
 \multicolumn{1}{l}{Adjusted R-squared} &
   \multicolumn{1}{r}{0.15} &
+  \multicolumn{1}{r}{0.27} &
   \multicolumn{1}{r}{0.27} \\
 \bottomrule
 \end{tabular}
 
  \footnotesize  
-\textbf{Notes:} Command: etable, estimates(model1 model2) mstat(N) mstat(r2\_a) 
+\textbf{Notes:} Dependent variable: log(wage). Standard errors in parentheses. 
 \end{threeparttable} 
 \end{table}
+\subsection{Integration with esttab}
+The following table uses esttab to append directly to the log file:
+\vspace{10pt}
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Regression Table via esttab (direct append)}
+\begin{tabular}{l*{2}{c}}
+\toprule
+            &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}\\
+            &\multicolumn{1}{c}{logwage}&\multicolumn{1}{c}{logwage}\\
+\midrule
+ttl\_exp     &      0.0480\sym{***}&      0.0393\sym{***}\\
+            &     (19.76)         &     (17.11)         \\
+\addlinespace
+grade       &                     &      0.0806\sym{***}\\
+            &                     &     (19.18)         \\
+\addlinespace
+\_cons      &       1.267\sym{***}&       0.321\sym{***}\\
+            &     (39.07)         &      (5.55)         \\
+\midrule
+\(N\)       &        2246         &        2244         \\
+\bottomrule
+\multicolumn{3}{l}{\footnotesize \textit{t} statistics in parentheses}\\
+\multicolumn{3}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+\end{table}
 
+\vspace{10pt}
+\section{Document Conclusion}
+This concludes the comprehensive test of the latexlog package.
+All subcommands and major options have been exercised.
+\vfill\noindent\textit{End of test document.}
 \end{document}

@@ -108,8 +108,32 @@ program define latexlog
     }
 
     if "`command'" == "addfig" {
-        syntax , FILEname(str) [float TITle(str) NOTES(str) notes_center WIdth(real 0.9) eol ///
-            title_in_tabular]
+        syntax , FILEname(str) [float TITle(str asis) NOTES(str asis) WIdth(real 0.9) eol]
+
+        // Parse title sub-options
+        local title_in_tabular ""
+        if `"`title'"' != "" {
+            _parse comma title_text title_opts : title
+            if `"`title_opts'"' != "" {
+                local 0 `title_opts'
+                syntax [, tabular]
+                local title_in_tabular `tabular'
+            }
+            local title `title_text'
+        }
+
+        // Parse notes sub-options
+        local notes_center ""
+        if `"`notes'"' != "" {
+            _parse comma notes_text notes_opts : notes
+            if `"`notes_opts'"' != "" {
+                local 0 `notes_opts'
+                syntax [, center]
+                local notes_center `center'
+            }
+            local notes `notes_text'
+        }
+
         splitpath "`logfile'"
         return list
         local path = r(path)
@@ -128,7 +152,7 @@ program define latexlog
         else {
             file write `f' `"\begin{figure}[H] "' _n
             if "`title'"!="" {
-                if "`title_in_tabular'"=="title_in_tabular" {
+                if "`title_in_tabular'"=="tabular" {
                     file write `f' `"\centering "' _n
                     file write `f' `"\begin{tabular}{p{6in}}"' _n
                     file write `f' `"\caption{`title'} "' _n
@@ -143,8 +167,7 @@ program define latexlog
             if "`notes'"!="" {
                 file write `f' `"\begin{tabular}{p{6in}}  "' _n
                 file write `f' `"\footnotesize \vspace{2pt} "' _n
-                // file write `f' `"\textbf{Notes}: `notes' "' _n
-                if "`notes_center'"=="notes_center" ///
+                if "`notes_center'"=="center" ///
                     file write `f' `"  \centering \textbf{Notes:} `notes' "' _n
                 else ///
                     file write `f' `"  \textbf{Notes:} `notes' "' _n
@@ -157,15 +180,39 @@ program define latexlog
 	
 	if "`command'" == "subfigure" {
         syntax ,  [open addfig close  FILEname(str) caption(str)  ///
-			TITle(str) NOTES(str) notes_center WIdth(real 0.9) eol /// 
-            title_in_tabular]
+			TITle(str asis) NOTES(str asis) WIdth(real 0.9) eol]
+
+        // Parse title sub-options
+        local title_in_tabular ""
+        if `"`title'"' != "" {
+            _parse comma title_text title_opts : title
+            if `"`title_opts'"' != "" {
+                local 0 `title_opts'
+                syntax [, tabular]
+                local title_in_tabular `tabular'
+            }
+            local title `title_text'
+        }
+
+        // Parse notes sub-options
+        local notes_center ""
+        if `"`notes'"' != "" {
+            _parse comma notes_text notes_opts : notes
+            if `"`notes_opts'"' != "" {
+                local 0 `notes_opts'
+                syntax [, center]
+                local notes_center `center'
+            }
+            local notes `notes_text'
+        }
+
 		file open `f' using `"`logfile'"', write append
-			
+
 		if "`open'"=="open" {
 			file write `f' `"\begin{figure}[H] "' _n
             if "`title'"!=`""' {
                 file write `f' `"\centering "' _n
-                if "`title_in_tabular'"=="title_in_tabular" {
+                if "`title_in_tabular'"=="tabular" {
                     file write `f' `"\begin{tabular}{p{6in}}"' _n
                     file write `f' `"  \caption{`title'} "' _n
                     file write `f' `"\end{tabular}"' _n
@@ -183,7 +230,7 @@ program define latexlog
 			local figpath = r(path)
 			cap mkdir `path'`figpath'
 			graph export `path'`filename', replace
-			// file write `f' `"\subfigure[`caption']{"' _n			
+			// file write `f' `"\subfigure[`caption']{"' _n
 			// // file write `f' `"\includegraphics[clip=true, trim=0 0 0 0, width = `width'\textwidth]{`filename'}  "' _n
 			// file write `f' `"\includegraphics[width = `width'\textwidth]{`filename'}  "' _n
 			// file write `f' `"}"' _n
@@ -198,7 +245,7 @@ program define latexlog
 			if "`notes'"!="" {
 				file write `f' `"\begin{tabular}{p{6in}}  "' _n
 				file write `f' `" \footnotesize "' _n
-				if "`notes_center'"=="notes_center" ///
+				if "`notes_center'"=="center" ///
 					file write `f' `"  \centering \textbf{Notes:} `notes' "' _n
 				else ///
 					file write `f' `" \textbf{Notes:} `notes' "' _n
@@ -220,12 +267,25 @@ program define latexlog
             THREEparttable ///
             FONTsize(str) ///
             LANDscape ///
+            TABularx(str asis) ///
             ]
+
+        // Parse tabularx sub-options: tabularx(col_numbers, width(width_spec))
+        local tabularx_width "\textwidth"
+        local tabularx_cols ""
+        if `"`tabularx'"' != "" {
+            _parse comma tabularx_cols tabularx_opts : tabularx
+            if `"`tabularx_opts'"' != "" {
+                local 0 `tabularx_opts'
+                syntax [, width(str)]
+                if "`width'" != "" local tabularx_width "`width'"
+            }
+        }
+
 		tempfile collectfile
-		collect export `collectfile', tableonly replace  as(tex)
+		collect export `collectfile', tableonly replace  as(tex) 
 
 		tempname table
-
 		file open `f' using `"`logfile'"', write append
 
         if "`landscape'"!="" {
@@ -278,6 +338,145 @@ program define latexlog
 			if "`noverticallines'"=="noverticallines" {
 				local line = subinstr("`line'","|","",.)
 			}
+
+            // Convert tabular to tabularx if option specified
+            if `"`tabularx'"' != "" {
+                // Replace \begin{tabular} with \begin{tabularx}{width}
+                if strmatch("`line'", "*\begin{tabular}*") {
+                    // Extract column spec from \begin{tabular}{colspec}
+                    local colstart = strpos("`line'", "\begin{tabular}{") + 16
+                    local colend = strpos(substr("`line'", `colstart', .), "}") - 1
+                    local colspec = substr("`line'", `colstart', `colend')
+
+                    // Build new column spec: replace l/c/r with X based on tabularx_cols
+                    local newcolspec ""
+                    local colnum 1
+                    forvalues i = 1/`=strlen("`colspec'")' {
+                        local ch = substr("`colspec'", `i', 1)
+                        // Check if this is a column type character
+                        if inlist("`ch'", "l", "c", "r") {
+                            // Replace with X if tabularx_cols is empty or colnum is in tabularx_cols
+                            local replace_col 0
+                            if "`tabularx_cols'" == "" {
+                                local replace_col 1
+                            }
+                            else {
+                                foreach col of local tabularx_cols {
+                                    if `col' == `colnum' {
+                                        local replace_col 1
+                                    }
+                                }
+                            }
+                            if `replace_col' {
+                                local newcolspec "`newcolspec'>{\centering\arraybackslash}X"
+                            }
+                            else {
+                                local newcolspec "`newcolspec'`ch'"
+                            }
+                            local colnum = `colnum' + 1
+                        }
+                        else {
+                            // Keep other characters (|, @{}, etc.) as-is
+                            local newcolspec "`newcolspec'`ch'"
+                        }
+                    }
+
+                    // Replace the tabular with tabularx and new column spec
+                    local before = substr("`line'", 1, strpos("`line'", "\begin{tabular}") - 1)
+                    local after = substr("`line'", `colstart' + `colend' + 1, .)
+                    local line "`before'\begin{tabularx}{`tabularx_width'}{`newcolspec'}`after'"
+                }
+                // Replace \end{tabular} with \end{tabularx}
+                if strmatch("`line'", "*\end{tabular}*") {
+                    local line = subinstr("`line'", "\end{tabular}", "\end{tabularx}", .)
+                }
+                // Strip \multicolumn{1}{l/c/r}{content} wrappers, keeping just content
+                // Need to handle nested braces in content (e.g., \hspace{1em})
+                while strmatch(`"`line'"', `"*\multicolumn{1}{*"') {
+                    local mcpos = strpos(`"`line'"', "\multicolumn{1}{")
+                    local rest = substr(`"`line'"', `mcpos' + 16, .)
+                    local alignend = strpos("`rest'", "}")
+                    local rest2 = substr("`rest'", `alignend' + 1, .)
+                    // Find matching } by counting brace depth
+                    local depth 0
+                    local clen 0
+                    forvalues i = 1/`=strlen(`"`rest2'"')' {
+                        local ch = substr(`"`rest2'"', `i', 1)
+                        if "`ch'" == "{" local depth = `depth' + 1
+                        if "`ch'" == "}" local depth = `depth' - 1
+                        if `depth' == 0 {
+                            local clen = `i'
+                            continue, break
+                        }
+                    }
+                    if `clen' > 0 {
+                        local content = substr(`"`rest2'"', 2, `clen' - 2)
+                        local before = substr(`"`line'"', 1, `mcpos' - 1)
+                        local after = substr(`"`rest2'"', `clen' + 1, .)
+                        local line `"`before'`content'`after'"'
+                    }
+                    else {
+                        continue, break
+                    }
+                }
+                // Preserve line break marker \\ before word processing
+                local has_linebreak 0
+                local linebreak_suffix ""
+                if strmatch(`"`line'"', `"*\\"') {
+                    local has_linebreak 1
+                    local linebreak_suffix " \\"
+                    // Remove trailing \\ (and preceding space if any)
+                    local line = regexr(`"`line'"', `"[ ]*\\\\\\\\$"', "")
+                    
+                }
+                
+                // Auto-hyphenate long words (>10 chars) for better column wrapping
+                // Process each word between spaces, ampersands, and slashes
+                local newline ""
+                local remaining `"`line'"'
+                while `"`remaining'"' != "" {
+                    // Find next delimiter (space, &, or /)
+                    local spacepos = strpos(`"`remaining'"', " ")
+                    local amppos = strpos(`"`remaining'"', "&")
+                    local slashpos = strpos(`"`remaining'"', "/")
+                    local delim_pos 0
+                    local delim ""
+                    // Find the earliest delimiter
+                    foreach d in space amp slash {
+                        if ``d'pos' > 0 & (`delim_pos' == 0 | ``d'pos' < `delim_pos') {
+                            local delim_pos = ``d'pos'
+                            if "`d'" == "space" local delim " "
+                            else if "`d'" == "amp" local delim "&"
+                            else if "`d'" == "slash" local delim "\slash "
+                        }
+                    }
+                    if `delim_pos' > 0 {
+                        local word = substr(`"`remaining'"', 1, `delim_pos' - 1)
+                        local remaining = substr(`"`remaining'"', `delim_pos' + 1, .)
+                    }
+                    else {
+                        local word `"`remaining'"'
+                        local remaining ""
+                        local delim ""
+                    }
+                    // Hyphenate long words (>10 chars) that don't contain backslash
+                    local wordlen = strlen(`"`word'"')
+                    if `wordlen' > 10 & strpos(`"`word'"', "\") == 0 {
+                        local hyphenated ""
+                        forvalues i = 1/`wordlen' {
+                            local ch = substr(`"`word'"', `i', 1)
+                            local hyphenated "`hyphenated'`ch'"
+                            // Insert \- every 5 characters (but not at end)
+                            if mod(`i', 5) == 0 & `i' < `wordlen' {
+                                local hyphenated "`hyphenated'\-"
+                            }
+                        }
+                        local word "`hyphenated'"
+                    }
+                    local newline `"`newline'`word'`delim'"'
+                }
+                local line `"`newline'`linebreak_suffix'"'
+            }
 
             file write `f'  "`line'" _n
 			file read `table' line
